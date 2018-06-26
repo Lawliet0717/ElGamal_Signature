@@ -6,8 +6,8 @@ import java.io.FileReader;
 import java.io.IOException;  
   
 public class ReadFile {  
+	
     public static String txt2String(File file) throws IOException{  
-    	
     	StringBuilder result = new StringBuilder(); 
         // 建立数据的输入通道  
         FileReader fileReader = new FileReader(file);  
@@ -18,24 +18,12 @@ public class ReadFile {
         while((length = fileReader.read(buf))!=-1){  
             result.append(new String(buf,0,length));  
         }  
-    	
+    	// 返回一个String类型
         return result.toString();
-    	
-        /*StringBuilder result = new StringBuilder();  
-        try{  
-            BufferedReader br = new BufferedReader(new FileReader(file));//构造一个BufferedReader类来读取文件  
-            String s = null;  
-            while((s = br.readLine())!=null){//使用readLine方法，一次读一行  
-                result.append(System.lineSeparator()+s);  
-            }  
-            br.close();      
-        }catch(Exception e){  
-            e.printStackTrace();  
-        }  
-        return result.toString();  */
     }  
       
-    public static void main(String[] args) throws IOException{  
+    public static void main(String[] args) throws IOException{
+    	// 需要读取的文件
         File file = new File("H:/test.txt");  
         System.out.println(txt2String(file));  
     }  

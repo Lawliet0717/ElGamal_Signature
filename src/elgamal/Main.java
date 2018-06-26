@@ -10,6 +10,9 @@ public class Main {
 	private static final BigInteger ONE = BigInteger.ONE;
 	
 	public static void main(String[] args) throws IOException {
+		long startTime = System.currentTimeMillis();
+		
+		// 从文件中读入消息m
 		File file = new File("H:/test.txt");
 
 		String m = ReadFile.txt2String(file);
@@ -18,7 +21,7 @@ public class Main {
 		int length = m.length();
 
 		// 随机的大素数p
-		BigInteger p = ElGamal.getPrime(length);
+		BigInteger p = ElGamal.getPrime(60);
 		System.out.println("p = " + p.toString());
 
 		// 下面计算时用到的p-1
@@ -27,7 +30,9 @@ public class Main {
 
 		// 枚举遍历求生成元g
 		BigInteger g = null;
-		g = ElGamal.getG(p, p_MinusOne);
+		while(g == null) {
+			g = ElGamal.getG(p, p_MinusOne);
+		}
 		System.out.println("g = " + g.toString());
 
 		// 随机数x,满足区间[2,p-1)
@@ -50,13 +55,13 @@ public class Main {
         BigInteger a = g.modPow(k,p);
         System.out.println("a = " + a.toString());
         
-        // h(m)
+        // 求安全的h(m)
         int hm = Math.abs(m.hashCode());
         String temp = String.valueOf(hm);
-        String hmm = temp.substring(1, 5);
-        BigInteger h_m = new BigInteger(hmm);
+        BigInteger h_m = new BigInteger(temp);
         System.out.println("h(m) = " + h_m.toString());
         
+        //验证 y的a次方 * a的b次方 ≡ g的h(m)次方  mod p 相等
         BigInteger tmp1 = h_m.subtract(x.multiply(a));
         System.out.println("tmp1 = " + tmp1.toString());
         
@@ -68,17 +73,26 @@ public class Main {
         
         System.out.println("消息m的数字签名为: " + a.toString() + "," + b.toString());
         
-        BigInteger left = y.pow(a.intValue()).multiply(a.pow(b.intValue())).mod(p);
+        BigInteger left = y.modPow(a, p).multiply(a.modPow(b, p)).mod(p);
         System.out.println("left = " + left.toString());
         
         int unsignedH_m = h_m.intValue();
         if(unsignedH_m < 0) {
         	unsignedH_m = -unsignedH_m;
         }
-        BigInteger right = g.pow(unsignedH_m).mod(p);
+        BigInteger right = g.modPow(h_m, p);
         
         System.out.println("right = " + right.toString());
         
+        if(left.toString().equals(right.toString())) {
+        	System.out.println("签名有效！");
+        } else {
+        	System.out.println("签名无效！");
+        }
+        
+        long endTime = System.currentTimeMillis();
+        
+        System.out.println("程序运行时间：" + (endTime - startTime) + "ms");    //输出程序运行时间
 	}
 	
 }

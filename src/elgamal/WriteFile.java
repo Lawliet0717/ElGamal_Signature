@@ -38,8 +38,9 @@ public class WriteFile {
 	
 	public static void main(String[] args) {  
 		
-		String str = "H:/test.txt";
+		String str = "G:/test.txt";
 		writeFile("hahaha", str);
+		
 		
     }  
 }
